@@ -66,6 +66,8 @@ public class GameFrame extends JFrame implements MouseListener, Runnable, Action
 		mouseDown = false;
 		if(paused)
 			go = false;
+		else
+			go =true;
 	}
 
 	public void mouseEntered(MouseEvent e) {
@@ -97,6 +99,54 @@ public class GameFrame extends JFrame implements MouseListener, Runnable, Action
 				}
 			}
 		}
+	}
+
+
+
+	public void run(){
+		ActionListener action =new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(go){
+					checkSurround(0,0);
+					counter++;
+				}
+			}
+		};
+		javax.swing.Timer time = new javax.swing.Timer(1000, action);
+		time.setInitialDelay(1000);
+		time.start();
+	}
+
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource() == start){
+			go = true;
+			paused = false;
+		}
+		if(e.getSource() == pause){
+			paused = true;
+			go = false;
+		}
+		if(e.getSource() == clear){
+			clearBoard();
+		}
+	}
+
+	public void clearBoard(){
+		for(int i = 0; i<panels.length; i++){
+			for(int j = 0; j<panels[0].length; j++){
+				nextPanels[i][j].setDead();
+				panels[i][j].setDead();
+			}
+		}
+	}
+
+	public static void main(String[] args){
+		GameFrame f = new GameFrame();
+		f.setVisible(true);
+		f.setBounds(0,0,100,100);
+		f.setTitle("The Game of Life");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setExtendedState(MAXIMIZED_BOTH);
 	}
 
 	public void checkSurround(int row, int col){
@@ -398,51 +448,5 @@ public class GameFrame extends JFrame implements MouseListener, Runnable, Action
 			else
 				checkSurround(row,col);
 		}
-	}
-
-	public void run(){
-		ActionListener action =new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				if(go){
-					checkSurround(0,0);
-					counter++;
-				}
-			}
-		};
-		javax.swing.Timer time = new javax.swing.Timer(1000, action);
-		time.setInitialDelay(1000);
-		time.start();
-	}
-
-	public void actionPerformed(ActionEvent e){
-		if(e.getSource() == start){
-			go = true;
-			paused = false;
-		}
-		if(e.getSource() == pause){
-			paused = true;
-			go = false;
-		}
-		if(e.getSource() == clear){
-			clearBoard();
-		}
-	}
-
-	public void clearBoard(){
-		for(int i = 0; i<panels.length; i++){
-			for(int j = 0; j<panels[0].length; j++){
-				nextPanels[i][j].setDead();
-				panels[i][j].setDead();
-			}
-		}
-	}
-
-	public static void main(String[] args){
-		GameFrame f = new GameFrame();
-		f.setVisible(true);
-		f.setBounds(0,0,100,100);
-		f.setTitle("The Game of Life");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setExtendedState(MAXIMIZED_BOTH);
 	}
 }
